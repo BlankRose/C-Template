@@ -1,0 +1,20 @@
+# This file contains the informations to build up the header
+# by the HeaderBuilder plugin on VSCode
+
+# Variables
+$NAME (padding: 43, trim: 43) = echo "Rosie (https://github.com/BlankRose)"
+$F (padding: 47, trim: 47) = echo "FT_Containers - " && basename "$FILE"
+$DATE (padding: 33, trim: 33) = date -r "$FILE"
+
+# Template
+===
+*********************************************************************
+         .-.                                                         
+   __   /   \   __                                                   
+  (  `'.\   /.'`  )   $F
+   '-._.(;;;)._.-'                                                   
+   .-'  ,`"`,  '-.                                                   
+  (__.-'/   \'-.__)   BY: $NAME
+      //\   /         Last Updated: $DATE
+     ||  '-'                                                         
+*********************************************************************
