@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Jun 28 18:55:36 CEST 2022     #
+#       //\   /         Last Updated: Sat Jul  2 16:36:36 CEST 2022     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -22,12 +22,15 @@ DEFINES =
 TEST_ARGS = 
 
 # Compilation options
-COMPILER = c++
+COMPILER = default
 FLAGS = -Wall -Werror -Wextra -g3
 ifneq ($(OS), Windows_NT)
 	DANGER = -fsanitize=address
 endif
+
+# External dependencies
 LIBRARIES = 
+MAKE_DIRS = 
 
 # Messages to display
 COMPILE_MSG = ƒ Compiling $@ ...
@@ -73,6 +76,15 @@ BACK = \033[2K\r
 CMP_TOTAL = $(shell awk -F' ' '{printf NF}' <<< "$(SRC)")
 CMP_COUNT = 0
 
+# If COMPILER is set to default
+ifeq ($(COMPILER), default)
+	ifeq ($(COMPILER), c)
+		COMPILER = gcc
+	else ifeq ($(COMPILER), cpp)
+		COMPILER = c++
+	endif
+endif
+
 #==--------------------------------------==#
 # *                                      * #
 #              RULES - COMMON              #
@@ -84,6 +96,10 @@ all: $(NAME)
 
 # Clears and recompile the whole project
 re: fclean all
+
+# Execute all makefiles requierd
+dependencies:
+	@$(shell awk -F' ' '{make -sC }' <<< '$(MAKE_DIRS)')
 
 # Compile and run the executable and clears
 ifeq ($(NAME), test)
@@ -160,3 +176,6 @@ fclean: clean
 	@del /F /Q $(addsuffix .exe, $(subst /,\,$(NAME)))
 
 endif
+
+# Personnal free to use template
+# BY Rosie ~
