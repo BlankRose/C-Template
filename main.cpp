@@ -9,6 +9,8 @@
 /*      ||  '-'                                                          */
 /* ********************************************************************* */
 
+#include "common.h"
+
 int		main(int, char **, char **)
 {
 	// Starting new Journey here..

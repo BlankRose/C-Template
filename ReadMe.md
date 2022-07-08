@@ -20,7 +20,8 @@
 	It mostly includes the following features:
 	<ul>
 		<li> Complete Makefile <i style = 'font-size:60%'>(based off GNU make)</i> </li>
-		<li> Pre-filled .gitignore <i style = 'font-size:60%'>(for those useless files..)</i> </li>
+		<li> Pre-filled .gitignore <i style = 'font-size:60%'>(for those unwanted files..)</i> </li>
+		<li> Quick header 'common.h' <i style = 'font-size:60%'>(includes most used headers)</i> </li>
 		<li> Personnal Header file <i style = 'font-size:60%'>(interpreted with VSCode plugins)</i> </li>
 	</ul>
 	That's about it. Very simple.
