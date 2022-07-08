@@ -9,6 +9,7 @@
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
+
 #==--------------------------------------==#
 # *                                      * #
 #             GLOBAL SETTINGS              #
@@ -16,7 +17,7 @@
 #==--------------------------------------==#
 
 # Executable specialities
-NAME = 
+NAME = untitled
 LANG = cpp
 DEFINES = 
 TEST_ARGS = 
@@ -25,10 +26,12 @@ TEST_ARGS =
 COMPILER = default
 FLAGS = -Wall -Werror -Wextra -g3
 ifneq ($(OS), Windows_NT)
+# Is unsupported on windows
 	DANGER = -fsanitize=address
 endif
 
 # External dependencies
+# MAKE_DIRS: not finished yet..
 LIBRARIES = 
 MAKE_DIRS = 
 
@@ -38,6 +41,10 @@ SUCCESS_MSG = √ The programm $(NAME) has been compiled successfully!
 CLEANING_MSG = ƒ Cleaning files ...
 CLEANOBJ_MSG = ø Objects has been cleared!
 
+
+
+
+
 #==--------------------------------------==#
 # *                                      * #
 #             LISTING SOURCES              #
@@ -45,12 +52,16 @@ CLEANOBJ_MSG = ø Objects has been cleared!
 #==--------------------------------------==#
 
 # Listing every source files
-ALL = 
+ALL = main q test
 SUBFOLDER =
 
 # Adds the applicable extension and path to each files
 SRC = $(addprefix $(SUBFOLDER), $(addsuffix .$(LANG), $(ALL)))
 OBJ = $(SRC:.$(LANG)=.o)
+
+
+
+
 
 #==--------------------------------------==#
 # *                                      * #
@@ -63,14 +74,23 @@ SILENT = > /dev/null 2>&1
 NOERR = || true
 STOP = && false
 
-# Syntax colors
-RED = \033[0;31m
-GRN = \033[0;32m
-YLW = \033[0;33m
-BLU = \033[0;34m
-NUL = \033[0m
-END = \033[0m\n
-BACK = \033[2K\r
+# Escape sequence getter
+ifeq ($(OS), Windows_NT)
+	ESC = 
+else
+	ESC = \033
+	NEWLINE = \n
+	BREAK = \r
+endif
+
+# Output control
+RED = $(ESC)[0;31m
+GRN = $(ESC)[0;32m
+YLW = $(ESC)[0;33m
+BLU = $(ESC)[0;34m
+NUL = $(ESC)[0m
+END = $(ESC)[0m$(NEWLINE)
+BACK = $(ESC)[2K$(BREAK)
 
 # Compiler counter
 CMP_TOTAL = $(shell awk -F' ' '{printf NF}' <<< "$(SRC)")
@@ -78,12 +98,16 @@ CMP_COUNT = 0
 
 # If COMPILER is set to default
 ifeq ($(COMPILER), default)
-	ifeq ($(COMPILER), c)
+	ifeq ($(LANG), c)
 		COMPILER = gcc
-	else ifeq ($(COMPILER), cpp)
+	else ifeq ($(LANG), cpp)
 		COMPILER = c++
 	endif
 endif
+
+
+
+
 
 #==--------------------------------------==#
 # *                                      * #
@@ -112,6 +136,10 @@ endif
 
 # Protection
 .PHONY: all re clean fclean re
+
+
+
+
 
 #==--------------------------------------==#
 # *                                      * #
@@ -144,6 +172,10 @@ clean:
 fclean: clean
 	@rm -f $(NAME)
 
+
+
+
+
 #==--------------------------------------==#
 # *                                      * #
 #            RULES - WINDOWS OS            #
@@ -155,27 +187,27 @@ else
 
 # Compile the sources into object files
 .$(LANG).o:
-	@echo $(COMPILE_MSG)
+	@echo $(BACK)$(YLW)$(COMPILE_MSG)$(NUL)
 	@$(COMPILER) $(FLAGS) -o $@ -c $<
-	@$(eval CMP_COUNT = $(shell expr $(CMP_COUNT) + 1))
 
 # Compile the objects and dependencies into an executable
 $(NAME): $(OBJ)
-	@echo $(COMPILE_MSG)
-	@$(COMPILER) $(LIBRARIES) $(DANGER) -o $(NAME) $(OBJ) $(MLX) 
-	@echo $(SUCCESS_MSG)
+	@echo $(BACK)$(YLW)$(COMPILE_MSG)$(NUL)
+	@$(COMPILER) $(LIBRARIES) $(DANGER) -o $(NAME) $(OBJ)
+	@echo $(BACK)$(GRN)$(SUCCESS_MSG)$(END)
 
 # Clears all objects files
 clean:
-	@echo $(CLEANING_MSG)
-	@del /F /Q $(subst /,\,$(OBJ))
-	@echo $(CLEANOBJ_MSG)
+	@echo $(BACK)$(YLW)$(CLEANING_MSG)$(NUL)
+	@del /f /q $(subst /,\,$(OBJ))
+	@echo $(BACK)$(RED)$(CLEANOBJ_MSG)$(END)
 
 # Clears all objects files, INCLUDING the executable
 fclean: clean
-	@del /F /Q $(addsuffix .exe, $(subst /,\,$(NAME)))
+	@del /f /q $(addsuffix .exe, $(subst /,\,$(NAME)))
 
 endif
+
 
 # Personnal free to use template
 # BY Rosie ~

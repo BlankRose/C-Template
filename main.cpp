@@ -12,5 +12,5 @@
 int		main(int, char **, char **)
 {
 	// Starting new Journey here..
-	return 1;
+	return 0;
 }
