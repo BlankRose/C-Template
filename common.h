@@ -1,11 +1,11 @@
 /* ********************************************************************* */
 /*          .-.                                                          */
 /*    __   /   \   __                                                    */
-/*   (  `'.\   /.'`  )   FT_Containers - header.hpp                      */
+/*   (  `'.\   /.'`  )   FT_Containers - common.h                        */
 /*    '-._.(;;;)._.-'                                                    */
 /*    .-'  ,`"`,  '-.                                                    */
 /*   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        */
-/*       //\   /         Last Updated: Tue Jun 28 18:57:00 CEST 2022     */
+/*       //\   /         Last Updated: Sat Jul 16 16:06:33 CEST 2022     */
 /*      ||  '-'                                                          */
 /* ********************************************************************* */
 
@@ -15,7 +15,7 @@
 // Includes of most
 // commonly used headers
 
-#ifndef __cplusplus
+#ifdef __cplusplus
 // Most used in CPP
 
 # include <algorithm>
