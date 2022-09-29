@@ -1,6 +1,7 @@
 .DS_Store
 .vscode/
 *.[oa]
-a.out
+*.out
 *.exe
+run
 t/

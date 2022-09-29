@@ -3,7 +3,7 @@
 
 # Variables
 $NAME (padding: 43, trim: 43) = echo "Rosie (https://github.com/BlankRose)"
-$F (padding: 47, trim: 47) = echo "FT_Containers - " && basename "$FILE"
+$F (padding: 47, trim: 47) = echo "C-Template - " && basename "$FILE"
 $DATE (padding: 33, trim: 33) = date -r "$FILE"
 
 # Template

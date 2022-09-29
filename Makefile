@@ -1,13 +1,14 @@
 # ********************************************************************* #
 #          .-.                                                          #
 #    __   /   \   __                                                    #
-#   (  `'.\   /.'`  )   FT_Containers - Makefile                        #
+#   (  `'.\   /.'`  )   C-Template - Makefile                           #
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sat Jul  2 16:36:36 CEST 2022     #
+#       //\   /         Last Updated: Tue Sep 27 20:04:23 CEST 2022     #
 #      ||  '-'                                                          #
 # ********************************************************************* #
+
 
 
 #==--------------------------------------==#
@@ -16,74 +17,129 @@
 # *                                      * #
 #==--------------------------------------==#
 
-# Executable specialities
-NAME = untitled
-LANG = cpp
-DEFINES = 
-TEST_ARGS = 
+# EXECUTABLE
+# Defines the executable's name and the arguments for 'make run/test'
 
-# Compilation options
+NAME = run
+ARGS = 
+
+# COMPILATION
+# Configurations for compilation
+
+LANG = cpp
 COMPILER = default
-FLAGS = -Wall -Werror -Wextra -g3
+LIB_FILES = 
+LIB_FOLDER = 
+INCLUDES = 
+LINKER_PARAMS = 
+COMPILE_PARAMS = -g3 -Wall -Werror -Wextra
 ifneq ($(OS), Windows_NT)
-# Is unsupported on windows
-	DANGER = -fsanitize=address
+	LINKER_PARAMS += -fsanitize=address
 endif
 
-# External dependencies
-# MAKE_DIRS: not finished yet..
-LIBRARIES = 
-MAKE_DIRS = 
+# DEPENDENCIES
+# Specify which subfolder to "make" and clone/pull needed repos
 
-# Messages to display
-COMPILE_MSG = ƒ Compiling $@ ...
-SUCCESS_MSG = √ The programm $(NAME) has been compiled successfully!
-CLEANING_MSG = ƒ Cleaning files ...
-CLEANOBJ_MSG = ø Objects has been cleared!
+EXT_FOLDER = libs
+REQUIERD = libft
+REPOSITORIES = git@github.com:BlankRose/libft.git
+EXT_BINARIES = 
 
+# SOURCE CODE
+# List of all source codes
 
+CLASSES_FILES = 
+CLASSES_FOLDER = classes
 
+GENERIC_FILES = main
+GENERIC_FOLDER = src
 
-
-#==--------------------------------------==#
-# *                                      * #
-#             LISTING SOURCES              #
-# *                                      * #
-#==--------------------------------------==#
-
-# Listing every source files
-ALL = main q test
-SUBFOLDER =
-
-# Adds the applicable extension and path to each files
-SRC = $(addprefix $(SUBFOLDER), $(addsuffix .$(LANG), $(ALL)))
-OBJ = $(SRC:.$(LANG)=.o)
-
-
+OBJECT_FOLDER = bin
 
 
 
 #==--------------------------------------==#
 # *                                      * #
-#               QUICK MACROS               #
+#              SPECIAL MACROS              #
 # *                                      * #
 #==--------------------------------------==#
 
-# Quick control
-SILENT = > /dev/null 2>&1
-NOERR = || true
-STOP = && false
-
-# Escape sequence getter
-ifeq ($(OS), Windows_NT)
-	ESC = 
+# LANGUAGE CORRECTOR
+ifeq (, $(filter $(LANG), C c))
+	FILE_EXTENSION := .c
+else ifeq (, $(filter $(LANG), CPP CPp Cpp cPP cPp cpP cpp c++ C++))
+	FILE_EXTENSION := .cpp
 else
-	ESC = \033
+	FILE_EXTENSION := .c
+endif
+
+# BASIC MACROS
+SRC = $(foreach file, $(GENERIC_FILES), $(GENERIC_FOLDER)$(FOLD)$(file)$(FILE_EXTENSION))
+GENERIC_SUBFILES = $(foreach file, $(CLASSES_FILES), $(CLASSES_FOLDER)$(FOLD)$(file)$(FILE_EXTENSION))
+SRC += $(addprefix $(GENERIC_FOLDER)$(FOLD), $(GENERIC_SUBFILES))
+OBJ = $(SRC:$(FILE_EXTENSION)=.o)
+LINKS = $(EXT_BINARIES) $(LINKER_PARAMS)
+FLAGS = $(addprefix -L, $(LIB_FOLDER)) \
+		$(addprefix -l, $(LIB_FILES)) \
+		$(addprefix -I, $(INCLUDES)) \
+		$(EXTRA_PARAMS)
+
+# SYSTEM CONTROL
+ifeq ($(OS), Windows_NT)
+	FOLD = \\
+	NOERR = || exit 0
+	SILENT = > NUL 2>&1
+	STOP = && exit 1
+else
+	FOLD = /
+	NOERR = || true
+	SILENT = > /dev/null 2>&1
+	STOP = && false
+endif
+CONTINUE = $(SILENT) $(NOERR)
+
+# PRE-GENERATED COMMANDS
+ifeq ($(OS), Windows_NT)
+	CMD_PRINT = echo
+	CMD_CLEAR = del /f /q
+	CMD_EXE = .exe
+else
+	CMD_PRINT = printf
+	CMD_CLEAR = rm -f
+endif
+ifneq ($(EXT_FOLDER), )
+	GO_EXT = mkdir $(EXT_FOLDER) $(SILENT); cd $(EXT_FOLDER) $(SILENT);
+endif
+GET_REPOS = $(GO_EXT) $(foreach repo, $(REPOSITORIES), git clone $(repo) $(SILENT); )
+MAKE_REQUIERD = $(GO_EXT) $(foreach folder, $(REQUIERD), make -sC $(folder) $(SILENT); )
+MAKE_CLEAR = $(GO_EXT) $(foreach folder, $(REQUIERD), make fclean -sC $(folder) $(SILENT); )
+
+# DEFAULT COMPILER SELECTOR
+ifeq ($(COMPILER), default)
+	ifeq ($(FILE_EXTENSION), .c)
+		COMPILER = gcc
+	else ifeq ($(FILE_EXTENSION), .cpp)
+		COMPILER = c++
+	else
+		COMPILER = c
+	endif
+endif
+
+
+
+#==--------------------------------------==#
+# *                                      * #
+#             DISPLAY MESSAGES             #
+# *                                      * #
+#==--------------------------------------==#
+
+# SYNTAX SEQUENCES
+ESC = 
+ifneq ($(OS), Windows_NT)
 	NEWLINE = \n
+	QUOTE = "
 	BREAK = \r
 endif
-
-# Output control
 RED = $(ESC)[0;31m
 GRN = $(ESC)[0;32m
 YLW = $(ESC)[0;33m
@@ -92,122 +148,81 @@ NUL = $(ESC)[0m
 END = $(ESC)[0m$(NEWLINE)
 BACK = $(ESC)[2K$(BREAK)
 
-# Compiler counter
-CMP_TOTAL = $(shell awk -F' ' '{printf NF}' <<< "$(SRC)")
-CMP_COUNT = 0
+# GENERAL COMBINAISONS
+MSG_WORK = $(QUOTE)$(BACK)$(YLW)
+MSG_GOOD = $(QUOTE)$(BACK)$(GRN)
+MSG_ERROR = $(QUOTE)$(BACK)$(RED)
+MSG_WRET = $(END)$(QUOTE)
+MSG_NRET = $(NUL)$(QUOTE)
 
-# If COMPILER is set to default
-ifeq ($(COMPILER), default)
-	ifeq ($(LANG), c)
-		COMPILER = gcc
-	else ifeq ($(LANG), cpp)
-		COMPILER = c++
-	endif
-endif
+# COMPILING MESSAGES
+GET_NEEDING = $(MSG_WORK)ƒ Fetching dependencies ...$(MSG_NRET)
+CMP_NEEDING = $(MSG_WORK)ƒ Compiling dependencies ...$(MSG_NRET)
+CMP_WORKING = $(MSG_WORK)ƒ Compiling $@ ...$(MSG_NRET)
+CMP_SUCCESS = $(MSG_GOOD)√ The programm $(NAME) has been compiled successfully!$(MSG_WRET)
+CMP_FAILURE = $(MSG_ERROR)ø The programm $(NAME) failed to compile!$(MSG_WRET)
 
-
+# CLEARING MESSAGES
+CLR_NEEDING = $(MSG_WORK)ƒ Cleaning dependencies ...$(MSG_NRET)
+CLR_WORKING = $(MSG_WORK)ƒ Cleaning files ...$(MSG_NRET)
+CLR_SUCCESS = $(MSG_GOOD)√ Objects has been cleared!$(MSG_WRET)
+CLR_FAILURE = $(MSG_ERROR)ø Objects couldn't be cleared!$(MSG_WRET)
 
 
 
 #==--------------------------------------==#
 # *                                      * #
-#              RULES - COMMON              #
+#              MAKEFILE RULES              #
 # *                                      * #
 #==--------------------------------------==#
 
-# Main call upon 'make'
 all: $(NAME)
 
-# Clears and recompile the whole project
-re: fclean all
-
-# Execute all makefiles requierd
 dependencies:
-	@$(shell awk -F' ' '{make -sC }' <<< '$(MAKE_DIRS)')
+ifneq ($(REPOSITORIES), )
+	@$(CMD_PRINT) $(GET_NEEDING)
+	@$(GET_REPOS) $(SILENT)
+endif
+ifneq ($(REQUIERD), )
+	@$(CMD_PRINT) $(CMP_NEEDING)
+	@$(MAKE_REQUIERD) $(SILENT)
+endif
 
-# Compile and run the executable and clears
-ifeq ($(NAME), test)
-tester: all
-else # Prevents override issue due to commonly choosen name
+.c.o:
+	@$(CMD_PRINT) $(CMP_WORKING)
+	@$(COMPILER) $(FLAGS) -o $@ -c $<
+
+.cpp.o:
+	@$(CMD_PRINT) $(CMP_WORKING)
+	@$(COMPILER) $(FLAGS) -o $@ -c $<
+
+$(NAME): dependencies $(OBJ)
+	@$(CMD_PRINT) $(CMP_WORKING)
+	@$(COMPILER) -o $(NAME) $(OBJ) $(LINKS) $(FLAGS)
+	@$(CMD_PRINT) $(CMP_SUCCESS)
+
+clean:
+	@$(CMD_PRINT) $(CLR_WORKING)
+	@$(CMD_CLEAR) $(OBJ) $(SILENT)
+	@$(CMD_PRINT) $(CLR_SUCCESS)
+
+fclean: clean
+	@$(CMD_CLEAR) $(NAME)$(CMD_EXE)
+
+libclean:
+	@$(CMD_PRINT) $(CLR_NEEDING)
+	@$(MAKE_CLEAR) $(SILENT)
+
+ifneq ($(NAME), run)
+run: all
+else
 test: all
 endif
-	@./$(NAME) $(TEST_ARGS) $(NOERR)
-	@make fclean
+	@./$(NAME) $(ARGS)
 
-# Protection
-.PHONY: all re clean fclean re
+re: libclean fclean all
 
-
-
-
-
-#==--------------------------------------==#
-# *                                      * #
-#             RULES - LINUX OS             #
-# *                                      * #
-#==--------------------------------------==#
-
-# Checks if its NOT Windows
-ifneq ($(OS), Windows_NT)
-
-# Compile the sources into object files
-.$(LANG).o:
-	@printf "$(BACK)$(YLW)[$(CMP_COUNT) / $(CMP_TOTAL)] $(COMPILE_MSG)$(NUL)"
-	@$(COMPILER) $(FLAGS) -o $@ -c $<
-	@$(eval CMP_COUNT = $(shell expr $(CMP_COUNT) + 1))
-
-# Compile the objects and dependencies into an executable
-$(NAME): $(OBJ)
-	@printf "$(BACK)$(YLW)[Finalizing..] $(COMPILE_MSG)$(NUL)"
-	@$(COMPILER) $(LIBRARIES) $(DANGER) -o $(NAME) $(OBJ)
-	@printf "$(BACK)$(GRN)$(SUCCESS_MSG)$(END)"
-
-# Clears all objects files
-clean:
-	@printf "$(BACK)$(YLW)$(CLEANING_MSG)$(NUL)"
-	@rm -f $(OBJ)
-	@printf "$(BACK)$(RED)$(CLEANOBJ_MSG)$(END)"
-
-# Clears all objects files, INCLUDING the executable
-fclean: clean
-	@rm -f $(NAME)
-
-
-
-
-
-#==--------------------------------------==#
-# *                                      * #
-#            RULES - WINDOWS OS            #
-# *                                      * #
-#==--------------------------------------==#
-
-# In case its running under Windows
-else
-
-# Compile the sources into object files
-.$(LANG).o:
-	@echo $(BACK)$(YLW)$(COMPILE_MSG)$(NUL)
-	@$(COMPILER) $(FLAGS) -o $@ -c $<
-
-# Compile the objects and dependencies into an executable
-$(NAME): $(OBJ)
-	@echo $(BACK)$(YLW)$(COMPILE_MSG)$(NUL)
-	@$(COMPILER) $(LIBRARIES) $(DANGER) -o $(NAME) $(OBJ)
-	@echo $(BACK)$(GRN)$(SUCCESS_MSG)$(END)
-
-# Clears all objects files
-clean:
-	@echo $(BACK)$(YLW)$(CLEANING_MSG)$(NUL)
-	@del /f /q $(subst /,\,$(OBJ))
-	@echo $(BACK)$(RED)$(CLEANOBJ_MSG)$(END)
-
-# Clears all objects files, INCLUDING the executable
-fclean: clean
-	@del /f /q $(addsuffix .exe, $(subst /,\,$(NAME)))
-
-endif
-
+.PHONY: all dependencies clean fclean re
 
 # Personnal free to use template
 # BY Rosie ~
