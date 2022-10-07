@@ -43,7 +43,7 @@
 		</ul>
 		<li> Apply by going to `Installation > Apply Changes`, after it's done, you may close the window.
 	</ul><br>
-	You can also get the GnuMake to use makefiles which are makes easier to compiler large projects<br>
+	You can also get the GnuMake to use makefiles which makes easier to compiler large projects<br>
 	It can get retrieved by using one of the two following methods:
 	<ul>
 		<li> Using the <a href="https://chocolatey.org/">Chocolatey Package Manager</a>
