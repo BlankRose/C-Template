@@ -26,3 +26,31 @@
 	</ul>
 	That's about it. Very simple.
 </p>
+
+<!-- Description -->
+<h2 style = 'font-size:160%; font-family:impact'>
+	🧭	Installation Guide
+</h2><p>
+	This section is mostly intended for those poeple who are getting started in C/C++ language.<br><br>
+	If you're going to dev with C/C++ languages, you'll first need a compiler, like MinGW:
+	<ul>
+		<li> Download and Install <a href="https://sourceforge.net/projects/mingw/">MinGW</a>
+		<li> Simply click continue, select whatever your choice is. Once reaching the MinGW Installation Manager select:
+		<ul>
+			<li> mingw32-base<br>
+			<li> mingw32-gcc-g++
+		</ul>
+		<li> Apply by going to `Installation > Apply Changes`, after it's done, you may close the window.
+	</ul><br>
+	You can also get the GnuMake to use makefiles which are makes easier to compiler large projects<br>
+	It can get retrieved by using one of the two following methods:
+	<ul>
+		<li> Using the <a href="https://chocolatey.org/">Chocolatey Package Manager</a>
+		<li> Download and Install <a href=https://sourceforge.net/projects/gnuwin32/files/make/3.81/make-3.81.exe/download>GnuWin</a>
+	</ul><br>
+	If you used all default options, you might need to add the following paths to your SYSTEM Environment variables:
+	<ul>
+		<li> C:\MinGW\bin <br><i>(for compilers command)</i>
+		<li> C:\Program Files (x86)\GnuWin32\bin <br><i>(for make command)</i>
+	</ul>
+</p>
