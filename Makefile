@@ -104,16 +104,23 @@ ifeq ($(OS), Windows_NT)
 	CMD_PRINT	= echo
 	CMD_CLEAR	= del /f /q
 	CMD_EXE		= .exe
+	ifneq ($(EXT_FOLDER), )
+		GO_EXT		= ((mkdir $(EXT_FOLDER) $(SILENT) && cd $(EXT_FOLDER) $(SILENT)) || cd $(EXT_FOLDER) $(SILENT))
+	endif
+	GET_REPOS		= $(GO_EXT) $(foreach rep, $(REPOSITORIES), && (git clone $(rep) $(SILENT) || git pull $(r) $(SILENT)) )
+	MAKE_REQUIERD	= $(GO_EXT) $(foreach dir, $(REQUIERD), && make -sC $(dir) )
+	MAKE_CLEAR		= $(GO_EXT) $(foreach dir, $(REQUIERD), && make fclean -sC $(dir) )
+
 else
 	CMD_PRINT	= printf
 	CMD_CLEAR	= rm -f
+	ifneq ($(EXT_FOLDER), )
+		GO_EXT		= mkdir $(EXT_FOLDER) $(SILENT); cd $(EXT_FOLDER) $(SILENT);
+	endif
+	GET_REPOS		= $(GO_EXT) $(foreach repo, $(REPOSITORIES), git clone $(repo) $(SILENT); )
+	MAKE_REQUIERD	= $(GO_EXT) $(foreach folder, $(REQUIERD), make -sC $(folder) $(SILENT); )
+	MAKE_CLEAR		= $(GO_EXT) $(foreach folder, $(REQUIERD), make fclean -sC $(folder) $(SILENT); )
 endif
-ifneq ($(EXT_FOLDER), )
-	GO_EXT		= mkdir $(EXT_FOLDER) $(SILENT); cd $(EXT_FOLDER) $(SILENT);
-endif
-GET_REPOS		= $(GO_EXT) $(foreach repo, $(REPOSITORIES), git clone $(repo) $(SILENT); )
-MAKE_REQUIERD	= $(GO_EXT) $(foreach folder, $(REQUIERD), make -sC $(folder) $(SILENT); )
-MAKE_CLEAR		= $(GO_EXT) $(foreach folder, $(REQUIERD), make fclean -sC $(folder) $(SILENT); )
 
 # DEFAULT COMPILER SELECTOR
 ifeq ($(COMPILER), default)
@@ -185,17 +192,13 @@ all: $(NAME)
 
 d: dependencies
 dependencies:
-ifneq ($(OS), Windows_NT)
-	ifneq ($(REPOSITORIES), )
+ifneq ($(REPOSITORIES), )
 	@$(CMD_PRINT) $(GET_NEEDING)
 	@$(GET_REPOS)
-	endif
-	ifneq ($(REQUIERD), )
+endif
+ifneq ($(REQUIERD), )
 	@$(CMD_PRINT) $(CMP_NEEDING)
 	@$(MAKE_REQUIERD)
-	endif
-else
-	@$(CMD_PRINT) $(NON_COMPAT)
 endif
 
 .c.o:
@@ -223,12 +226,8 @@ fclean: clean
 
 lc: libclean
 libclean:
-ifneq ($(OS), Windows_NT)
 	@$(CMD_PRINT) $(CLR_NEEDING)
 	@$(MAKE_CLEAR)
-else
-	@$(CMD_PRINT) $(NON_COMPAT)
-endif
 
 ifneq ($(NAME), run)
 r: run
