@@ -22,6 +22,7 @@
 		<li> Complete Makefile <i style = 'font-size:60%'>(based off GNU make)</i> </li>
 		<li> Pre-filled .gitignore <i style = 'font-size:60%'>(for those unwanted files..)</i> </li>
 		<li> Quick header 'common.h' <i style = 'font-size:60%'>(includes most used headers)</i> </li>
+		<li> License file <i style = 'font-size:60%'>(it's part of the template: you can do whichever license as you want)</i>
 		<li> Personnal Header file <i style = 'font-size:60%'>(interpreted with
 		<a href="https://marketplace.visualstudio.com/items?itemName=Alpha1337k.header-builder">VSCode plugins</a>)</i> </li>
 	</ul>
