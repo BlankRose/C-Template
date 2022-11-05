@@ -180,8 +180,10 @@ NON_COMPAT	= $(MSG_ERROR)ø This rule is not compatible yet with your OS $(OS)$(
 # *                                      * #
 #==--------------------------------------==#
 
+a: all
 all: $(NAME)
 
+d: dependencies
 dependencies:
 ifneq ($(OS), Windows_NT)
 	ifneq ($(REPOSITORIES), )
@@ -205,19 +207,21 @@ endif
 	@$(COMPILER) $(FLAGS) -o $@ -c $<
 
 $(NAME): dependencies $(OBJ)
-	@$(CMD_PRINT) $(SRC)
 	@$(CMD_PRINT) $(CMP_WORKING)
 	@$(COMPILER) -o $(NAME) $(OBJ) $(LINKS) $(FLAGS)
 	@$(CMD_PRINT) $(CMP_SUCCESS)
 
+c: clean
 clean:
 	@$(CMD_PRINT) $(CLR_WORKING)
 	@$(CMD_CLEAR) $(OBJ) $(SILENT)
 	@$(CMD_PRINT) $(CLR_SUCCESS)
 
+fc: fclean
 fclean: clean
 	@$(CMD_CLEAR) $(NAME)$(CMD_EXE)
 
+lc: libclean
 libclean:
 ifneq ($(OS), Windows_NT)
 	@$(CMD_PRINT) $(CLR_NEEDING)
@@ -227,15 +231,18 @@ else
 endif
 
 ifneq ($(NAME), run)
+r: run
 run: all
 else
+t: test
 test: all
 endif
 	@./$(NAME) $(ARGUMENTS)
 
-re: libclean fclean all
+re: remake
+remake: fclean all
 
-.PHONY: all dependencies clean fclean re
+.PHONY: all dependencies clean fclean libclean remake
 
 # Personnal free to use template
 # BY Rosie ~
