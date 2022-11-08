@@ -1,6 +1,7 @@
 # Unwanted
 .DS_Store
 .vscode/
+*.dSYM/
 tmp/
 
 # Prerequisites
@@ -35,4 +36,4 @@ tmp/
 *.exe
 *.out
 *.app
-run
+runtime
