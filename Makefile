@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Nov  8 13:54:35 CET 2022      #
+#       //\   /         Last Updated: Sun Nov 13 20:02:00 CET 2022      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -38,8 +38,8 @@ ARGUMENTS		=
 
 LANGUAGE		= cpp
 COMPILER		= default
-LIB_FILES		= ft
-LIB_FOLDER		= libs/libft
+LIB_FILES		= 
+LIB_FOLDER		= 
 INCLUDES		= 
 DEFINES			= 
 EXTRA_PARAMS	= -Wall -Werror -Wextra -g3
@@ -58,8 +58,8 @@ endif
 # with EXT_BINARIES
 
 EXT_FOLDER		= libs
-REQUIERD		= libft
-REPOSITORIES	= git@github.com:BlankRose/libft.git
+REQUIERD		= 
+REPOSITORIES	= 
 EXT_BINARIES	= 
 
 
@@ -67,7 +67,7 @@ EXT_BINARIES	=
 # Wether or not you want to make it more discret [false / true]
 
 # SILENCE_OTHER will silent dependency's makefile(s) (from REQUIERD)
-# SILENCE_THIS will silent this current makefile (not recommended though...)
+# SILENCE_THIS will silent this current makefile (not recommended though..)
 
 SILENCE_OTHER	= false
 SILENCE_THIS	= false
@@ -88,14 +88,17 @@ CLASSES			= $(addprefix $(CLASSES_FOLDER)$(FOLD), $(CLASSES_FILES))
 #####   MANDATORY   #####
 # GENERIC_FILES will get extension applied according to LANGUAGE
 # GENERIC_FOLDER is the subfolder(s) where is located all of the files
+# BIN_FOLDER will define where the objects files will be created
 
-GENERIC_FILES	= main $(CLASSES)
+GENERIC_FILES	= $(CLASSES) main a b c
 GENERIC_FOLDER	= src
+BIN_FOLDER		= bin
 
 # Source files which doesn't has the expected extension for set
 # LANGUAGE or has different subfolder can be set with SRC
 
-SRC				= 
+SOURCES			= 
+OBJECTS			= 
 
 
 
@@ -119,6 +122,7 @@ RED			= $(ESC)[0;31m
 GRN			= $(ESC)[0;32m
 YLW			= $(ESC)[0;33m
 BLU			= $(ESC)[0;34m
+DRK			= $(ESC)[0;2m
 NUL			= $(ESC)[0m
 END			= $(ESC)[0m$(NEWLINE)
 BACK		= $(ESC)[2K$(BREAK)
@@ -149,11 +153,15 @@ CMP_FAILURE	= $(MSG_ERROR) The programm $(NAME) failed to compile!$(MSG_WRET)
 #####   CLEARING MESSAGES   #####
 CLR_NEEDING	= $(MSG_WORK) Cleaning dependencies ...$(MSG_NRET)
 CLR_WORKING	= $(MSG_WORK) Cleaning files ...$(MSG_NRET)
-CLR_SUCCESS	= $(MSG_GOOD) Objects has been cleared!$(MSG_WRET)
-CLR_FAILURE	= $(MSG_ERROR) Objects couldn't be cleared!$(MSG_WRET)
+CLR_SUCCESS	= $(MSG_GOOD) Objects has been removed!$(MSG_WRET)
+CLR_FAILURE	= $(MSG_ERROR) Objects couldn't be removed!$(MSG_WRET)
+CLR_EXECUTE	= $(MSG_GOOD) Executable has been removed!$(MSG_WRET)
+CLR_EXEFAIL	= $(MSG_ERROR) Executable couldn't be removed!$(MSG_WRET)
 
 #####   MISC MESSAGES   #####
-NON_COMPAT	= $(MSG_ERROR) This rule is not compatible yet with your OS $(OS)$(MSG_WRET)
+MISC_COMP	= $(MSG_ERROR) This rule is not compatible yet with your OS $(OS)$(MSG_WRET)
+MISC_DRINK	= $(MSG_WORK) Preparing your order...$(MSG_NRET)
+MISC_READY	= $(MSG_GOOD) Here's your drink~ UwU$(MSG_WRET)
 
 
 
@@ -186,11 +194,19 @@ endif
 
 # BASIC MACROS
 ifneq ($(GENERIC_FOLDER), )
-	SRC		+= $(foreach file, $(GENERIC_FILES), $(GENERIC_FOLDER)$(FOLD)$(file)$(FILE_EXTENSION))
+	SRC		= $(foreach file, $(GENERIC_FILES), $(GENERIC_FOLDER)$(FOLD)$(file)$(FILE_EXTENSION))
 else
-	SRC 	+= $(foreach file, $(GENERIC_FILES), $(file)$(FILE_EXTENSION))
+	SRC 	= $(foreach file, $(GENERIC_FILES), $(file)$(FILE_EXTENSION))
 endif
-OBJ			= $(SRC:$(FILE_EXTENSION)=.o)
+ifneq ($(BIN_FOLDER), )
+	OBJ		= $(foreach file, $(GENERIC_FILES), $(BIN_FOLDER)$(FOLD)$(file).o)
+else
+	OBJ		= $(SRC:$(FILE_EXTENSION)=.o)
+endif
+ifneq ($(SOURCES), )
+	SRC		+= $(SOURCES)
+	OCJ		+= $(OBJECTS)
+endif
 LINKS		= $(addprefix -L, $(LIB_FOLDER)) \
 			  $(addprefix -l, $(LIB_FILES)) \
 			  $(EXT_BINARIES) $(LINKER_PARAMS)
@@ -220,8 +236,8 @@ endif
 
 # PRE-GENERATED COMMANDS
 ifeq ($(OS), Windows_NT)
-	CMD_PRINT	= echo
-	CMD_CLEAR	= del /f /q
+	CMD_PRINT		= echo
+	CMD_CLEAR		= del /f /q /s
 	ifneq ($(suffix $(NAME)), .a)
 		CMD_EXE		= .exe
 	endif
@@ -234,8 +250,8 @@ ifeq ($(OS), Windows_NT)
 	MAKE_REQUIERD	= $(GO_EXT) $(foreach dir, $(REQUIERD), && make -C $(dir) $(SILENT_MK) )
 	MAKE_CLEAR		= $(GO_EXT) $(foreach dir, $(REQUIERD), && make fclean -C $(dir) $(SILENT_MK) )
 else
-	CMD_PRINT	= printf
-	CMD_CLEAR	= rm -f
+	CMD_PRINT		= printf
+	CMD_CLEAR		= rm -Rf
 	ifneq ($(EXT_FOLDER), )
 		GO_EXT		= mkdir $(EXT_FOLDER) $(SILENT); cd $(EXT_FOLDER) $(SILENT);
 	endif
@@ -243,7 +259,10 @@ else
 	MAKE_REQUIERD	= $(GO_EXT) $(foreach dir, $(REQUIERD), make -C $(dir) $(SILENT_MK); )
 	MAKE_CLEAR		= $(GO_EXT) $(foreach dir, $(REQUIERD), make fclean -C $(dir) $(SILENT_MK); )
 endif
-CMD_LIB			= ar -rc
+CMD_LIB		= ar -rc
+CMD_MKDIR	= mkdir
+CMD_RMDIR	= rmdir
+CMD_COMPILE	= $(COMPILER) $(FLAGS) -o $@ -c $<
 
 # DEFAULT COMPILER SELECTOR
 ifeq ($(COMPILER), default)
@@ -256,6 +275,17 @@ ifeq ($(COMPILER), default)
 	endif
 endif
 
+#####   RUINS   #####
+# Old artifact used for making loading bars
+# Its left as a remain in case I want to reimplement them better..
+
+CMP_WORK_CT	= $(MSG_WORK) [$(CMP_COUNT) / $(CMP_TOTAL)] Compiling $@ ...$(MSG_NRET)
+CMP_TOTAL	= $(shell awk -F' ' '{printf NF}' <<< "$(SRC)")
+CMP_COUNT	= 0
+
+#	@$(CMD_PRINT) $(CMP_WORK_CT) $(SILENT_TS)
+#	@$(eval CMP_COUNT = $(shell expr $(CMP_COUNT) + 1))
+
 
 
 #==--------------------------------------==#
@@ -264,8 +294,8 @@ endif
 # *                                      * #
 #==--------------------------------------==#
 
-a: all
 all: $(NAME)
+a: all
 
 d: dependencies
 dependencies:
@@ -278,15 +308,32 @@ ifneq ($(REQUIERD), )
 	@$(MAKE_REQUIERD)
 endif
 
+$(BIN_FOLDER)/%.o: $(GENERIC_FOLDER)/%.c
+	@$(CMD_MKDIR) $(BIN_FOLDER) $(CONTINUE) $(SILENT_TS)
+	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
+	@$(CMD_COMPILE) $(SILENT_TS)
+
+$(BIN_FOLDER)/%.o: $(GENERIC_FOLDER)/%.cpp
+	@$(CMD_MKDIR) $(BIN_FOLDER) $(CONTINUE) $(SILENT_TS)
+	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
+	@$(CMD_COMPILE) $(SILENT_TS)
+
 .c.o:
 	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
-	@$(COMPILER) $(FLAGS) -o $@ -c $<
+	@$(CMD_COMPILE) $(SILENT_TS)
 
 .cpp.o:
 	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
-	@$(COMPILER) $(FLAGS) -o $@ -c $<
+	@$(CMD_COMPILE) $(SILENT_TS)
 
+ifneq ($(REQUIERD), )
 $(NAME): dependencies $(OBJ)
+else ifneq ($(REPOSITORIES), )
+$(NAME): dependencies $(OBJ)
+else
+$(NAME): $(OBJ)
+endif
+	echo $?
 	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
 ifeq ($(suffix $(NAME)), .a)
 	@$(CMD_LIB) $(NAME) $(OBJ)
@@ -298,13 +345,25 @@ endif
 
 c: clean
 clean:
+ifeq ($(BIN_FOLDER), )
 	@$(CMD_PRINT) $(CLR_WORKING) $(SILENT_TS)
 	@$(CMD_CLEAR) $(OBJ) $(SILENT)
 	@$(CMD_PRINT) $(CLR_SUCCESS) $(SILENT_TS)
+else
+	@if [ -d ./$(BIN_FOLDER) ]; \
+		then $(CMD_CLEAR) $(BIN_FOLDER) \
+		&&   $(CMD_PRINT) $(CLR_SUCCESS) $(SILENT_TS); \
+		else $(CMD_PRINT) $(CLR_FAILURE) $(SILENT_TS); \
+	fi
+endif
 
 fc: fclean
 fclean: clean
-	@$(CMD_CLEAR) $(NAME)$(CMD_EXE)
+	@if [ -f $(NAME)$(CMD_EXE) ]; \
+		then $(CMD_CLEAR) $(NAME)$(CMD_EXE) \
+		&&   $(CMD_PRINT) $(CLR_EXECUTE) $(SILENT_TS); \
+		else $(CMD_CLEAR) $(CLR_EXEFAIL) $(SILENT_TS); \
+	fi
 
 lc: libclean
 libclean:
@@ -323,13 +382,37 @@ test: all
 endif
 	@./$(NAME) $(ARGUMENTS)
 
+tea: drink
+coffee: drink
+drink:
+	@$(CMD_PRINT) $(MISC_DRINK)
+	@sleep 3
+	@$(CMD_PRINT) $(MISC_READY)
+	@$(CMD_PRINT) $(QUOTE)$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)$(DRK)        ██    ██    ██$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)$(DRK)      ██      ██  ██ $(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)$(DRK)      ██    ██    ██ $(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)$(DRK)        ██  ██      ██$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)$(DRK)        ██    ██    ██$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)    ████████████████████$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)    ██                ██$(DRK)████$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)    ██                ██$(DRK)  ██$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)    ██                ██$(DRK)  ██$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)    ██                ██$(DRK)████$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)      ██            ██$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)  ████████████████████████$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)  ██                    ██$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)    ████████████████████$(MSG_WRET)
+	@$(CMD_PRINT) $(QUOTE)$(MSG_WRET)
+
 re: remake
 remake: fclean all
 
 ra: remakeall
 remakeall: allclean all
 
-.PHONY: all dependencies clean fclean libclean allclean remake remakeall
+.PHONY: all dependencies clean fclean libclean allclean remake remakeall drink
 
 # Personnal free to use template
 # BY Rosie ~

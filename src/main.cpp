@@ -5,7 +5,7 @@
 /*    '-._.(;;;)._.-'                                                    */
 /*    .-'  ,`"`,  '-.                                                    */
 /*   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        */
-/*       //\   /         Last Updated: Tue Sep 27 14:45:22 CEST 2022     */
+/*       //\   /         Last Updated: Sun Nov 13 19:57:34 CET 2022      */
 /*      ||  '-'                                                          */
 /* ********************************************************************* */
 
@@ -13,6 +13,10 @@
 
 int		main(int, char **, char **)
 {
-	// Starting new Journey here..
+	int		i = 300;
+
+	std::cout << "Hello World" << std::endl;
 	return 0;
+
+	(void) i;
 }
