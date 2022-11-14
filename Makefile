@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Sun Nov 13 20:02:00 CET 2022      #
+#       //\   /         Last Updated: Mon Nov 14 12:16:19 CET 2022      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -90,7 +90,7 @@ CLASSES			= $(addprefix $(CLASSES_FOLDER)$(FOLD), $(CLASSES_FILES))
 # GENERIC_FOLDER is the subfolder(s) where is located all of the files
 # BIN_FOLDER will define where the objects files will be created
 
-GENERIC_FILES	= $(CLASSES) main a b c
+GENERIC_FILES	= $(CLASSES) main
 GENERIC_FOLDER	= src
 BIN_FOLDER		= bin
 
@@ -333,7 +333,6 @@ $(NAME): dependencies $(OBJ)
 else
 $(NAME): $(OBJ)
 endif
-	echo $?
 	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
 ifeq ($(suffix $(NAME)), .a)
 	@$(CMD_LIB) $(NAME) $(OBJ)

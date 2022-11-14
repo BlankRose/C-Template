@@ -5,7 +5,7 @@
 /*    '-._.(;;;)._.-'                                                    */
 /*    .-'  ,`"`,  '-.                                                    */
 /*   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        */
-/*       //\   /         Last Updated: Sun Nov 13 19:57:34 CET 2022      */
+/*       //\   /         Last Updated: Mon Nov 14 12:15:09 CET 2022      */
 /*      ||  '-'                                                          */
 /* ********************************************************************* */
 
@@ -13,10 +13,6 @@
 
 int		main(int, char **, char **)
 {
-	int		i = 300;
-
 	std::cout << "Hello World" << std::endl;
 	return 0;
-
-	(void) i;
 }
