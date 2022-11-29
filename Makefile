@@ -5,9 +5,17 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Mon Nov 14 12:16:19 CET 2022      #
+#       //\   /         Last Updated: Tue Nov 29 15:25:50 CET 2022      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
+
+##		-= NOTICE =-
+##	You might want to consider calling [make ac / allclean]
+##	before modifying any of those settings below!
+
+##		-=  HELP  =-
+##	If you want a list of usable rules and their functions,
+##	you can call the rule 'help'
 
 
 
@@ -45,7 +53,7 @@ DEFINES			=
 EXTRA_PARAMS	= -Wall -Werror -Wextra -g3
 LINKER_PARAMS	= 
 ifneq ($(OS), Windows_NT)
-	LINKER_PARAMS += -fsanitize=address
+	LINKER_PARAMS	+= -fsanitize=address
 endif
 
 
@@ -58,8 +66,8 @@ endif
 # with EXT_BINARIES
 
 EXT_FOLDER		= libs
-REQUIERD		= 
-REPOSITORIES	= 
+REQUIERD		= MLX42
+REPOSITORIES	= git@github.com:codam-coding-college/MLX42.git
 EXT_BINARIES	= 
 
 
@@ -69,8 +77,16 @@ EXT_BINARIES	=
 # SILENCE_OTHER will silent dependency's makefile(s) (from REQUIERD)
 # SILENCE_THIS will silent this current makefile (not recommended though..)
 
-SILENCE_OTHER	= false
+SILENCE_OTHER	= true
 SILENCE_THIS	= false
+
+
+#####   PACKAGING   #####
+# Make a package containing the executable and the 
+# neccessary objects for exporting defined by PKG_REQUIERD
+
+PKG_FOLDER		= pkg
+PKG_REQUIERD	= assets
 
 
 
@@ -80,14 +96,17 @@ SILENCE_THIS	= false
 # *                                      * #
 #==--------------------------------------==#
 
+# You can use the $(FOLD) macro for getting the OS-Specific folder slash
+# which may proves useful when sorting input like below
+# Will be / in Unix or \ in Windows
+
 CLASSES_FOLDER	= classes
 CLASSES_FILES	= 
 CLASSES			= $(addprefix $(CLASSES_FOLDER)$(FOLD), $(CLASSES_FILES))
 
-
 #####   MANDATORY   #####
 # GENERIC_FILES will get extension applied according to LANGUAGE
-# GENERIC_FOLDER is the subfolder(s) where is located all of the files
+# GENERIC_FOLDER is the subfolder where is located all of the files
 # BIN_FOLDER will define where the objects files will be created
 
 GENERIC_FILES	= $(CLASSES) main
@@ -114,8 +133,10 @@ OBJECTS			=
 #####   SYNTAX SEQUENCES   #####
 ESC			= 
 ifneq ($(OS), Windows_NT)
+	ICO_PROCESS	= ƒ
+	ICO_SUCCESS	= √
+	ICO_FAILURE	= ø
 	NEWLINE	= \n
-	QUOTE	= "
 	BREAK	= \r
 endif
 RED			= $(ESC)[0;31m
@@ -127,291 +148,63 @@ NUL			= $(ESC)[0m
 END			= $(ESC)[0m$(NEWLINE)
 BACK		= $(ESC)[2K$(BREAK)
 
-#####   DISPLAY ICONS   #####
-ifneq ($(OS), Windows_NT)
-	ICO_PROCESS	= ƒ
-	ICO_SUCCESS	= √
-	ICO_FAILURE	= ø
-endif
-
 #####   GENERAL COMBINAISONS   #####
-MSG_WORK	= $(QUOTE)$(BACK)$(YLW)$(ICO_PROCESS)
-MSG_GOOD	= $(QUOTE)$(BACK)$(GRN)$(ICO_SUCCESS)
-MSG_ERROR	= $(QUOTE)$(BACK)$(RED)$(ICO_FAILURE)
-MSG_WRET	= $(END)$(QUOTE)
-MSG_NRET	= $(NUL)$(QUOTE)
+MSG_WORK	= $(BACK)$(YLW)$(ICO_PROCESS)
+MSG_GOOD	= $(BACK)$(GRN)$(ICO_SUCCESS)
+MSG_ERROR	= $(BACK)$(RED)$(ICO_FAILURE)
 
 #####   COMPILING MESSAGES   #####
-GET_NEEDING	= $(MSG_WORK) Fetching dependencies ...$(MSG_NRET)
-CMP_NEEDING	= $(MSG_WORK) Compiling dependencies ...$(MSG_NRET)
-CMP_WORKING	= $(MSG_WORK) Compiling $@ ...$(MSG_NRET)
-LIB_SUCCESS	= $(MSG_GOOD) The library $(NAME) has been compiled successfully!$(MSG_WRET)
-LIB_FAILURE	= $(MSG_ERROR) The library $(NAME) failed to compile!$(MSG_WRET)
-CMP_SUCCESS	= $(MSG_GOOD) The programm $(NAME) has been compiled successfully!$(MSG_WRET)
-CMP_FAILURE	= $(MSG_ERROR) The programm $(NAME) failed to compile!$(MSG_WRET)
+GET_NEEDING	= $(MSG_WORK) Fetching dependencies ... $(NUL)
+CMP_NEEDING	= $(MSG_WORK) Compiling dependencies ... $(NUL)
+CMP_WORKING	= $(MSG_WORK) Compiling $@ ... $(NUL)
+LIB_SUCCESS	= $(MSG_GOOD) The library $(NAME) has been compiled successfully! $(END)
+LIB_FAILURE	= $(MSG_ERROR) The library $(NAME) failed to compile! $(END)
+CMP_SUCCESS	= $(MSG_GOOD) The programm $(NAME) has been compiled successfully! $(END)
+CMP_FAILURE	= $(MSG_ERROR) The programm $(NAME) failed to compile! $(END)
+PKG_SUCCESS = $(MSG_GOOD) The package is ready for export! $(END)
 
 #####   CLEARING MESSAGES   #####
-CLR_NEEDING	= $(MSG_WORK) Cleaning dependencies ...$(MSG_NRET)
-CLR_WORKING	= $(MSG_WORK) Cleaning files ...$(MSG_NRET)
-CLR_SUCCESS	= $(MSG_GOOD) Objects has been removed!$(MSG_WRET)
-CLR_FAILURE	= $(MSG_ERROR) Objects couldn't be removed!$(MSG_WRET)
-CLR_EXECUTE	= $(MSG_GOOD) Executable has been removed!$(MSG_WRET)
-CLR_EXEFAIL	= $(MSG_ERROR) Executable couldn't be removed!$(MSG_WRET)
+CLR_NEEDING	= $(MSG_WORK) Cleaning dependencies ... $(NUL)
+CLR_WORKING	= $(MSG_WORK) Cleaning files ... $(NUL)
+CLR_SUCCESS	= $(MSG_GOOD) Objects has been removed! $(END)
+CLR_FAILURE	= $(MSG_ERROR) Objects couldn't be removed! $(END)
+CLR_EXECUTE	= $(MSG_GOOD) Executable has been removed! $(END)
+CLR_EXEFAIL	= $(MSG_ERROR) Executable couldn't be removed! $(END)
+CLR_PACKAGE	= $(MSG_GOOD) Package has been removed! $(END)
+CLR_PKGFAIL	= $(MSG_ERROR) Package couldn't be removed! $(END)
+CLR_DEPENDS	= $(MSG_GOOD) Dependencies has been removed! $(END)
+CLR_DEPFAIL	= $(MSG_ERROR) Dependencies couldn't be removed! $(END)
 
 #####   MISC MESSAGES   #####
-MISC_COMP	= $(MSG_ERROR) This rule is not compatible yet with your OS $(OS)$(MSG_WRET)
-MISC_DRINK	= $(MSG_WORK) Preparing your order...$(MSG_NRET)
-MISC_READY	= $(MSG_GOOD) Here's your drink~ UwU$(MSG_WRET)
-
-
-
-
-
-# ****************************************************************** #
-#       /\\                                                          #
-#      /  \\    CAUTION: Dont touch below unless you know what you   #
-#     / || \\      are doing! If you think it needs improvement,     #
-#    /  ..  \\     feels free to make a Pull Request. Thanks :)      #
-#   /========\\                                                      #
-# ****************************************************************** #
+MISC_NOEXTF	= $(MSG_ERROR) This rule needs EXT_FOLDER to be set to be used! $(END)
+MISC_NOCOMP	= $(MSG_ERROR) This rule is not compatible yet with your OS $(OS) $(END)
+MISC_DRINK	= $(MSG_WORK) Preparing your order... $(NUL)
+MISC_READY	= $(MSG_GOOD) Here's your drink~ UwU $(END)
 
 
 
 #==--------------------------------------==#
 # *                                      * #
-#              SPECIAL MACROS              #
+#             MAKEFILE HANDLER             #
 # *                                      * #
 #==--------------------------------------==#
 
-# LANGUAGE CORRECTOR
-ifneq (, $(filter CPP CPp Cpp cPP cPp cpP cpp c++ C++, $(LANGUAGE)))
-	FILE_EXTENSION := .cpp
-else ifneq (, $(filter C c, $(LANGUAGE)))
-	FILE_EXTENSION := .c
-else
-	FILE_EXTENSION := .$(LANGUAGE)
-endif
+BUILD_DIR		= build
+.DEFAULT_GOAL	= all
 
-# BASIC MACROS
-ifneq ($(GENERIC_FOLDER), )
-	SRC		= $(foreach file, $(GENERIC_FILES), $(GENERIC_FOLDER)$(FOLD)$(file)$(FILE_EXTENSION))
-else
-	SRC 	= $(foreach file, $(GENERIC_FILES), $(file)$(FILE_EXTENSION))
-endif
-ifneq ($(BIN_FOLDER), )
-	OBJ		= $(foreach file, $(GENERIC_FILES), $(BIN_FOLDER)$(FOLD)$(file).o)
-else
-	OBJ		= $(SRC:$(FILE_EXTENSION)=.o)
-endif
-ifneq ($(SOURCES), )
-	SRC		+= $(SOURCES)
-	OCJ		+= $(OBJECTS)
-endif
-LINKS		= $(addprefix -L, $(LIB_FOLDER)) \
-			  $(addprefix -l, $(LIB_FILES)) \
-			  $(EXT_BINARIES) $(LINKER_PARAMS)
-FLAGS		= $(addprefix -I, $(INCLUDES)) \
-			  $(addprefix -D, $(DEFINES)) \
-			  $(EXTRA_PARAMS)
-
-# SYSTEM CONTROL
 ifeq ($(OS), Windows_NT)
-	FOLD	= \\
-	NOERR	= || exit 0
-	SILENT	= > NUL 2>&1
-	STOP	= && exit 1
+include $(BUILD_DIR)\WindowsNT.mk
 else
-	FOLD	= /
-	NOERR	= || true
-	SILENT	= > /dev/null 2>&1
-	STOP	= && false
-endif
-CONTINUE	= $(SILENT) $(NOERR)
-ifeq ($(SILENCE_OTHER), true)
-	SILENT_MK	= $(SILENT)
-endif
-ifeq ($(SILENCE_THIS), true)
-	SILENT_TS	= $(SILENT)
+include $(BUILD_DIR)/Unix.mk
 endif
 
-# PRE-GENERATED COMMANDS
-ifeq ($(OS), Windows_NT)
-	CMD_PRINT		= echo
-	CMD_CLEAR		= del /f /q /s
-	ifneq ($(suffix $(NAME)), .a)
-		CMD_EXE		= .exe
-	endif
-	ifneq ($(EXT_FOLDER), )
-		GO_EXT		= ((mkdir $(EXT_FOLDER) $(SILENT) && cd $(EXT_FOLDER) $(SILENT)) || cd $(EXT_FOLDER) $(SILENT))
-	else
-		GO_EXT		= exit 0
-	endif
-	GET_REPOS		= $(GO_EXT) $(foreach rep, $(REPOSITORIES), && (git clone $(rep) $(SILENT) || git pull $(r) $(SILENT)) )
-	MAKE_REQUIERD	= $(GO_EXT) $(foreach dir, $(REQUIERD), && make -C $(dir) $(SILENT_MK) )
-	MAKE_CLEAR		= $(GO_EXT) $(foreach dir, $(REQUIERD), && make fclean -C $(dir) $(SILENT_MK) )
-else
-	CMD_PRINT		= printf
-	CMD_CLEAR		= rm -Rf
-	ifneq ($(EXT_FOLDER), )
-		GO_EXT		= mkdir $(EXT_FOLDER) $(SILENT); cd $(EXT_FOLDER) $(SILENT);
-	endif
-	GET_REPOS		= $(GO_EXT) $(foreach rep, $(REPOSITORIES), git clone $(rep) $(CONTINUE); )
-	MAKE_REQUIERD	= $(GO_EXT) $(foreach dir, $(REQUIERD), make -C $(dir) $(SILENT_MK); )
-	MAKE_CLEAR		= $(GO_EXT) $(foreach dir, $(REQUIERD), make fclean -C $(dir) $(SILENT_MK); )
-endif
-CMD_LIB		= ar -rc
-CMD_MKDIR	= mkdir
-CMD_RMDIR	= rmdir
-CMD_COMPILE	= $(COMPILER) $(FLAGS) -o $@ -c $<
-
-# DEFAULT COMPILER SELECTOR
-ifeq ($(COMPILER), default)
-	ifeq ($(FILE_EXTENSION), .cpp)
-		COMPILER = c++
-	else ifeq ($(FILE_EXTENSION), .c)
-		COMPILER = gcc
-	else
-		COMPILER = gcc
-	endif
-endif
-
-#####   RUINS   #####
-# Old artifact used for making loading bars
-# Its left as a remain in case I want to reimplement them better..
-
-CMP_WORK_CT	= $(MSG_WORK) [$(CMP_COUNT) / $(CMP_TOTAL)] Compiling $@ ...$(MSG_NRET)
-CMP_TOTAL	= $(shell awk -F' ' '{printf NF}' <<< "$(SRC)")
-CMP_COUNT	= 0
-
-#	@$(CMD_PRINT) $(CMP_WORK_CT) $(SILENT_TS)
-#	@$(eval CMP_COUNT = $(shell expr $(CMP_COUNT) + 1))
-
-
-
-#==--------------------------------------==#
-# *                                      * #
-#              MAKEFILE RULES              #
-# *                                      * #
-#==--------------------------------------==#
-
-all: $(NAME)
-a: all
-
-d: dependencies
-dependencies:
-ifneq ($(REPOSITORIES), )
-	@$(CMD_PRINT) $(GET_NEEDING) $(SILENT_TS)
-	@$(GET_REPOS)
-endif
-ifneq ($(REQUIERD), )
-	@$(CMD_PRINT) $(CMP_NEEDING) $(SILENT_TS)
-	@$(MAKE_REQUIERD)
-endif
-
-$(BIN_FOLDER)/%.o: $(GENERIC_FOLDER)/%.c
-	@$(CMD_MKDIR) $(BIN_FOLDER) $(CONTINUE) $(SILENT_TS)
-	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
-	@$(CMD_COMPILE) $(SILENT_TS)
-
-$(BIN_FOLDER)/%.o: $(GENERIC_FOLDER)/%.cpp
-	@$(CMD_MKDIR) $(BIN_FOLDER) $(CONTINUE) $(SILENT_TS)
-	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
-	@$(CMD_COMPILE) $(SILENT_TS)
-
-.c.o:
-	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
-	@$(CMD_COMPILE) $(SILENT_TS)
-
-.cpp.o:
-	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
-	@$(CMD_COMPILE) $(SILENT_TS)
-
-ifneq ($(REQUIERD), )
-$(NAME): dependencies $(OBJ)
-else ifneq ($(REPOSITORIES), )
-$(NAME): dependencies $(OBJ)
-else
-$(NAME): $(OBJ)
-endif
-	@$(CMD_PRINT) $(CMP_WORKING) $(SILENT_TS)
-ifeq ($(suffix $(NAME)), .a)
-	@$(CMD_LIB) $(NAME) $(OBJ)
-	@$(CMD_PRINT) $(LIB_SUCCESS) $(SILENT_TS)
-else
-	@$(COMPILER) -o $(NAME) $(OBJ) $(LINKS) $(FLAGS)
-	@$(CMD_PRINT) $(CMP_SUCCESS) $(SILENT_TS)
-endif
-
-c: clean
-clean:
-ifeq ($(BIN_FOLDER), )
-	@$(CMD_PRINT) $(CLR_WORKING) $(SILENT_TS)
-	@$(CMD_CLEAR) $(OBJ) $(SILENT)
-	@$(CMD_PRINT) $(CLR_SUCCESS) $(SILENT_TS)
-else
-	@if [ -d ./$(BIN_FOLDER) ]; \
-		then $(CMD_CLEAR) $(BIN_FOLDER) \
-		&&   $(CMD_PRINT) $(CLR_SUCCESS) $(SILENT_TS); \
-		else $(CMD_PRINT) $(CLR_FAILURE) $(SILENT_TS); \
-	fi
-endif
-
-fc: fclean
-fclean: clean
-	@if [ -f $(NAME)$(CMD_EXE) ]; \
-		then $(CMD_CLEAR) $(NAME)$(CMD_EXE) \
-		&&   $(CMD_PRINT) $(CLR_EXECUTE) $(SILENT_TS); \
-		else $(CMD_CLEAR) $(CLR_EXEFAIL) $(SILENT_TS); \
-	fi
-
-lc: libclean
-libclean:
-	@$(CMD_PRINT) $(CLR_NEEDING) $(SILENT_TS)
-	@$(MAKE_CLEAR)
-
-ac: allclean
-allclean: fclean libclean
-
-ifneq ($(NAME), run)
-r: run
-run: all
-else
-t: test
-test: all
-endif
-	@./$(NAME) $(ARGUMENTS)
-
-tea: drink
-coffee: drink
-drink:
-	@$(CMD_PRINT) $(MISC_DRINK)
-	@sleep 3
-	@$(CMD_PRINT) $(MISC_READY)
-	@$(CMD_PRINT) $(QUOTE)$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)$(DRK)        ██    ██    ██$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)$(DRK)      ██      ██  ██ $(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)$(DRK)      ██    ██    ██ $(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)$(DRK)        ██  ██      ██$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)$(DRK)        ██    ██    ██$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)    ████████████████████$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)    ██                ██$(DRK)████$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)    ██                ██$(DRK)  ██$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)    ██                ██$(DRK)  ██$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)    ██                ██$(DRK)████$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)      ██            ██$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)  ████████████████████████$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)  ██                    ██$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)    ████████████████████$(MSG_WRET)
-	@$(CMD_PRINT) $(QUOTE)$(MSG_WRET)
-
-re: remake
-remake: fclean all
-
-ra: remakeall
-remakeall: allclean all
-
-.PHONY: all dependencies clean fclean libclean allclean remake remakeall drink
+.PHONY: \
+	all clean fullclean \
+	dependencies dependclean \
+	package packageclean \
+	allclean trueclean \
+	remake remakeall \
+	drink
 
 # Personnal free to use template
 # BY Rosie ~
