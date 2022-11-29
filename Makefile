@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Nov 29 15:25:50 CET 2022      #
+#       //\   /         Last Updated: Tue Nov 29 15:51:21 CET 2022      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -197,6 +197,7 @@ include $(BUILD_DIR)\WindowsNT.mk
 else
 include $(BUILD_DIR)/Unix.mk
 endif
+include $(BUILD_DIR)$(FOLD)General.mk
 
 .PHONY: \
 	all clean fullclean \

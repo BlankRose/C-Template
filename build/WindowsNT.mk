@@ -5,7 +5,7 @@
 #    '-._.(;;;)._.-'                                                    #
 #    .-'  ,`"`,  '-.                                                    #
 #   (__.-'/   \'-.__)   BY: Rosie (https://github.com/BlankRose)        #
-#       //\   /         Last Updated: Tue Nov 29 15:36:39 CET 2022      #
+#       //\   /         Last Updated: Tue Nov 29 15:36:45 CET 2022      #
 #      ||  '-'                                                          #
 # ********************************************************************* #
 
@@ -103,10 +103,6 @@ MAKE_CLEAR		= $(GO_EXT) $(foreach dir, $(REQUIERD), && make fclean -C $(dir) $(S
 #              MAKEFILE RULES              #
 # *                                      * #
 #==--------------------------------------==#
-
-all: $(NAME)
-everything: all
-a: all
 
 d: dependencies
 requierd: dependencies
